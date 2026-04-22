@@ -1,9 +1,3 @@
 # CS475-Agentic-Health-Coach
 
-Overview:
-
-The Agentic Health Coach uses Apple Watch/phone based health data along with the user's calendar to deliver notifications to encourage healthier behavior using the relevant context. Notifications to be timely (sent when certain events/activities occur) proactive (before behavior occurs, and with the intent of encouraging behavior) and contextual (taking into account user information to decide what to say and when to say it)
-
-The user will also be able to customize the tone/character of the AI agent that generates these notifications and acts as the health coach.
-
-The user will also be able to modify the information the agent has access to as a form of privacy control.
+The proposed Agentic Health Coach is a proactive wellness assistant that combines Apple Watch data, smartphone context, and calendar information to deliver timely, low-friction health recommendations through the watch and phone. Rather than requiring users to manually inspect dashboards or initiate conversations, the system continuously interprets wearable and contextual signals in relation to user-defined goals such as improving sleep, increasing activity, managing stress, or maintaining workout consistency. When the agent detects an appropriate intervention opportunity, it generates a concise, context-aware recommendation, explains why it appeared, and delivers it through a glanceable Apple Watch interaction with optional follow-up on the phone. The system also gives users control over tone, notification behavior, and data access, allowing the experience to remain personalized, understandable, and privacy-aware rather than intrusive.
