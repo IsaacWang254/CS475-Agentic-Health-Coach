@@ -7,7 +7,7 @@ The proposed Agentic Health Coach is a proactive wellness assistant that combine
 
 ## 1. Project Initialization & Permissions
 - [x] Initialize Xcode project with both **iOS** and **watchOS** companion targets.
-- [ ] Configure **HealthKit** entitlements and request read permissions (Sleep, Active Energy, Workouts, Heart Rate, HRV).
+- [x] Configure **HealthKit** entitlements and request read permissions (Sleep, Active Energy, Workouts, Heart Rate, HRV).
 - [ ] Configure **EventKit** entitlements to read calendar data for contextual awareness.
 - [ ] Request **Push Notification** and **Background Modes** (Background Fetch, Processing) permissions.
 

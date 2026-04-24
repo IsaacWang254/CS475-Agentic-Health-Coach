@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Agentic Health Coach reads your sleep, activity, workouts, and heart data to deliver timely, personalized wellness recommendations.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Agentic Health Coach may log workouts and mindful sessions you initiate through the app.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

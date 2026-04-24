@@ -26,6 +26,9 @@ struct AgenticHealthCoachApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .task {
+                    await HealthKitManager.shared.requestAuthorization()
+                }
         }
         .modelContainer(sharedModelContainer)
     }
