@@ -28,6 +28,8 @@ struct AgenticHealthCoachApp: App {
             ContentView()
                 .task {
                     await HealthKitManager.shared.requestAuthorization()
+                    await EventKitManager.shared.requestAuthorization()
+                    await NotificationManager.shared.requestAuthorization()
                 }
         }
         .modelContainer(sharedModelContainer)
