@@ -12,10 +12,10 @@ The proposed Agentic Health Coach is a proactive wellness assistant that combine
 - [x] Request **Local Notification** (UNUserNotificationCenter) and **Background Modes** (Background Fetch, Processing) permissions.
 
 ## 2. Core Data Ingestion & Context Layer
-- [ ] Build a HealthKit manager to continuously query and aggregate Apple Watch data.
-- [ ] Build an EventKit manager to fetch upcoming calendar events (to determine "free time" vs. "busy/stressed" contexts).
-- [ ] Implement background processing tasks to periodically sync and cache context data without draining the battery.
-- [ ] Create a local storage layer (CoreData or SwiftData) to store user preferences, generated recommendations, and historical signals.
+- [x] Build a HealthKit manager to continuously query and aggregate Apple Watch data.
+- [x] Build an EventKit manager to fetch upcoming calendar events (to determine "free time" vs. "busy/stressed" contexts).
+- [x] Implement background processing tasks to periodically sync and cache context data without draining the battery.
+- [x] Create a local storage layer (CoreData or SwiftData) to store user preferences, generated recommendations, and historical signals.
 
 ## 3. The Agentic Logic (Intelligence Layer)
 - [ ] Define data models for the four primary user goals: Sleep, Activity, Stress Management, and Workout Consistency.

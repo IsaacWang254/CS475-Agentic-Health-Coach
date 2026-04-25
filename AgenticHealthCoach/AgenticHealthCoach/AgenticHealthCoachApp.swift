@@ -10,9 +10,12 @@ import SwiftData
 
 @main
 struct AgenticHealthCoachApp: App {
-    var sharedModelContainer: ModelContainer = {
+    let sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            UserPreferences.self,
+            ContextSnapshot.self,
+            Recommendation.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -23,6 +26,10 @@ struct AgenticHealthCoachApp: App {
         }
     }()
 
+    init() {
+        ContextSyncService.registerBackgroundTasks(container: sharedModelContainer)
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -30,6 +37,8 @@ struct AgenticHealthCoachApp: App {
                     await HealthKitManager.shared.requestAuthorization()
                     await EventKitManager.shared.requestAuthorization()
                     await NotificationManager.shared.requestAuthorization()
+                    await ContextSyncService.syncNow(container: sharedModelContainer)
+                    ContextSyncService.scheduleNextRefresh()
                 }
         }
         .modelContainer(sharedModelContainer)
