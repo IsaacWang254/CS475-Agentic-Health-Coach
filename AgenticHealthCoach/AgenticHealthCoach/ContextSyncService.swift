@@ -34,6 +34,7 @@ enum ContextSyncService {
 
         let snapshot = ContextSnapshot(
             timestamp: .now,
+            stepsToday: health.stepsToday,
             sleepHoursLastNight: health.sleepHoursLastNight,
             activeEnergyKcalToday: health.activeEnergyKcalToday,
             latestHeartRateBPM: health.latestHeartRateBPM,
@@ -47,6 +48,8 @@ enum ContextSyncService {
         context.insert(snapshot)
         pruneSnapshots(context: context, keepLast: 200)
         try? context.save()
+
+        await RecommendationEngine().runOnce(container: container)
     }
 
     private static func handle(task: BGAppRefreshTask, container: ModelContainer) {

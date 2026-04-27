@@ -9,6 +9,15 @@ import SwiftData
 enum HealthGoal: String, Codable, CaseIterable, Identifiable {
     case sleep, activity, stress, workoutConsistency
     var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .sleep: "Sleep"
+        case .activity: "Activity"
+        case .stress: "Stress Management"
+        case .workoutConsistency: "Workout Consistency"
+        }
+    }
 }
 
 enum AgentTone: String, Codable, CaseIterable, Identifiable {
@@ -42,6 +51,7 @@ final class UserPreferences {
 @Model
 final class ContextSnapshot {
     var timestamp: Date
+    var stepsToday: Int?
     var sleepHoursLastNight: Double?
     var activeEnergyKcalToday: Double?
     var latestHeartRateBPM: Double?
@@ -52,6 +62,7 @@ final class ContextSnapshot {
 
     init(
         timestamp: Date = .now,
+        stepsToday: Int? = nil,
         sleepHoursLastNight: Double? = nil,
         activeEnergyKcalToday: Double? = nil,
         latestHeartRateBPM: Double? = nil,
@@ -61,6 +72,7 @@ final class ContextSnapshot {
         minutesUntilNextEvent: Int? = nil
     ) {
         self.timestamp = timestamp
+        self.stepsToday = stepsToday
         self.sleepHoursLastNight = sleepHoursLastNight
         self.activeEnergyKcalToday = activeEnergyKcalToday
         self.latestHeartRateBPM = latestHeartRateBPM

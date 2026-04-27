@@ -7,6 +7,7 @@ import Foundation
 import HealthKit
 
 struct HealthAggregate {
+    var stepsToday: Int?
     var sleepHoursLastNight: Double?
     var activeEnergyKcalToday: Double?
     var latestHeartRateBPM: Double?
@@ -33,6 +34,7 @@ final class HealthKitManager {
     private var readTypes: Set<HKObjectType> {
         var types: Set<HKObjectType> = [
             HKObjectType.workoutType(),
+            HKQuantityType(.stepCount),
             HKQuantityType(.activeEnergyBurned),
             HKQuantityType(.heartRate),
             HKQuantityType(.heartRateVariabilitySDNN),
@@ -59,6 +61,7 @@ final class HealthKitManager {
     }
 
     func currentAggregate() async -> HealthAggregate {
+        async let steps = stepsToday()
         async let sleep = sleepHoursLastNight()
         async let energy = activeEnergyKcalToday()
         async let hr = latestQuantity(.heartRate, unit: HKUnit.count().unitDivided(by: .minute()))
@@ -66,12 +69,27 @@ final class HealthKitManager {
         async let workouts = workoutCountLast7Days()
 
         return await HealthAggregate(
+            stepsToday: steps,
             sleepHoursLastNight: sleep,
             activeEnergyKcalToday: energy,
             latestHeartRateBPM: hr,
             latestHRVms: hrv,
             workoutsLast7Days: workouts
         )
+    }
+
+    private func stepsToday() async -> Int? {
+        let type = HKQuantityType(.stepCount)
+        let start = Calendar.current.startOfDay(for: Date())
+        let predicate = HKQuery.predicateForSamples(withStart: start, end: Date())
+
+        return await withCheckedContinuation { cont in
+            let query = HKStatisticsQuery(quantityType: type, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, stats, _ in
+                let count = stats?.sumQuantity()?.doubleValue(for: .count())
+                cont.resume(returning: count.map { Int($0) })
+            }
+            store.execute(query)
+        }
     }
 
     private func sleepHoursLastNight() async -> Double? {

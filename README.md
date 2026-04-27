@@ -18,10 +18,10 @@ The proposed Agentic Health Coach is a proactive wellness assistant that combine
 - [x] Create a local storage layer (CoreData or SwiftData) to store user preferences, generated recommendations, and historical signals.
 
 ## 3. The Agentic Logic (Intelligence Layer)
-- [ ] Define data models for the four primary user goals: Sleep, Activity, Stress Management, and Workout Consistency.
-- [ ] Develop the trigger logic: Define thresholds that prompt an intervention (e.g., low sleep + free calendar slot = "take a nap" recommendation).
-- [ ] Integrate an LLM or on-device natural language generator to craft the context-aware recommendation text.
-- [ ] Implement the "Explanation Engine" (ensuring the agent can articulate *why* a specific recommendation was generated based on recent data).
+- [x] Define data models for the four primary user goals: Sleep, Activity, Stress Management, and Workout Consistency.
+- [x] Develop the trigger logic: Define thresholds that prompt an intervention (e.g., low sleep + free calendar slot = "take a nap" recommendation).
+- [x] Integrate an LLM or on-device natural language generator to craft the context-aware recommendation text.
+- [x] Implement the "Explanation Engine" (ensuring the agent can articulate *why* a specific recommendation was generated based on recent data).
 
 ## 4. iOS App (The Control Center)
 - [ ] **Onboarding Flow:** Screen to define primary health goals and grant permissions.
