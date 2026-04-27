@@ -99,7 +99,18 @@ struct RecommendationEngine {
                 return "- \(mins) min ago [\($0.goal.displayName)]: \($0.message)"
             }.joined(separator: "\n")
 
+        let lastPingLine: String
+        if let last = recent.first {
+            let mins = Int(now.timeIntervalSince(last.timestamp) / 60)
+            lastPingLine = "Last nudge sent: \(mins) min ago"
+        } else {
+            lastPingLine = "Last nudge sent: never"
+        }
+
         let goals = prefs.goals.map(\.displayName).joined(separator: ", ")
+        let personal = prefs.personalGoals.isEmpty
+            ? "(none provided — respect the broad goal categories above)"
+            : prefs.personalGoals
 
         return """
         You are an Apple Watch health coach agent. You decide *whether* to send a nudge right now and *what it says*. Bias toward staying quiet — nudges only help when they are timely, specific, and grounded in the data.
@@ -109,9 +120,13 @@ struct RecommendationEngine {
           { "action": "nudge", "goal": "<one of: sleep, activity, stress, workoutConsistency>", "message": "<glanceable, ≤80 chars, no emojis, no quotes>", "explanation": "<1-2 sentences, ≤220 chars, cite the specific signals that triggered this>" }
 
         Current local time: \(timeOfDay) (\(weekday))
+        \(lastPingLine)
         Quiet hours: \(prefs.quietHoursStart):00–\(prefs.quietHoursEnd):00 (avoid nudging in this window unless urgent)
-        User-selected goals: \(goals)
+        User-selected goal categories: \(goals)
         Tone: \(prefs.tone.rawValue)
+
+        User's goals in their own words (treat as ground truth for what success looks like):
+        \(personal)
 
         Available signals (some may be missing — note that as a reason to stay quiet rather than guessing):
         \(signals)
@@ -119,7 +134,7 @@ struct RecommendationEngine {
         Recent nudges (do not repeat or contradict these; respect a soft cadence — the user prefers ≥ \(prefs.minHoursBetweenNudges) hours between nudges unless something urgent changed):
         \(history)
 
-        Decide now. If you nudge, ground the explanation in the actual numbers above.
+        Decide now. If you nudge, ground the explanation in the actual numbers above and tie it to the user's own words when possible.
         """
     }
 

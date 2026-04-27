@@ -11,6 +11,7 @@ struct SettingsView: View {
     let preferences: UserPreferences
 
     @State private var goals: Set<HealthGoal> = []
+    @State private var personalGoals: String = ""
     @State private var tone: AgentTone = .empathetic
     @State private var minHours: Int = 3
     @State private var quietStart: Int = 22
@@ -29,6 +30,20 @@ struct SettingsView: View {
                             }
                         ))
                     }
+                }
+
+                Section {
+                    TextField(
+                        "e.g. Walk 8k steps daily. In bed by 11pm.",
+                        text: $personalGoals,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...6)
+                    .onChange(of: personalGoals) { save() }
+                } header: {
+                    Text("Your goals in your words")
+                } footer: {
+                    Text("The agent reads these every time it decides whether to nudge you.")
                 }
 
                 Section {
@@ -76,6 +91,7 @@ struct SettingsView: View {
 
     private func load() {
         goals = Set(preferences.goals)
+        personalGoals = preferences.personalGoals
         tone = preferences.tone
         minHours = preferences.minHoursBetweenNudges
         quietStart = preferences.quietHoursStart
@@ -84,6 +100,7 @@ struct SettingsView: View {
 
     private func save() {
         preferences.goals = Array(goals)
+        preferences.personalGoals = personalGoals.trimmingCharacters(in: .whitespacesAndNewlines)
         preferences.tone = tone
         preferences.minHoursBetweenNudges = minHours
         preferences.quietHoursStart = quietStart

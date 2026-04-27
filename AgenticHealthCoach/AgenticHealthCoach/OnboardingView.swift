@@ -12,6 +12,7 @@ struct OnboardingView: View {
     var onFinish: () -> Void
 
     @State private var selectedGoals: Set<HealthGoal> = []
+    @State private var personalGoals: String = ""
     @State private var tone: AgentTone = .empathetic
     @State private var requesting = false
 
@@ -34,6 +35,19 @@ struct OnboardingView: View {
                             }
                         ))
                     }
+                }
+
+                Section {
+                    TextField(
+                        "e.g. Walk 8k steps daily. In bed by 11pm. Two strength sessions a week.",
+                        text: $personalGoals,
+                        axis: .vertical
+                    )
+                    .lineLimit(3...6)
+                } header: {
+                    Text("Your goals in your words")
+                } footer: {
+                    Text("The agent reads these every time it decides whether to nudge you.")
                 }
 
                 Section("Tone") {
@@ -63,6 +77,7 @@ struct OnboardingView: View {
             .navigationTitle("Get started")
             .onAppear {
                 selectedGoals = Set(preferences.goals)
+                personalGoals = preferences.personalGoals
                 tone = preferences.tone
             }
         }
@@ -73,6 +88,7 @@ struct OnboardingView: View {
         defer { requesting = false }
 
         preferences.goals = Array(selectedGoals)
+        preferences.personalGoals = personalGoals.trimmingCharacters(in: .whitespacesAndNewlines)
         preferences.tone = tone
         preferences.hasCompletedOnboarding = true
         try? modelContext.save()

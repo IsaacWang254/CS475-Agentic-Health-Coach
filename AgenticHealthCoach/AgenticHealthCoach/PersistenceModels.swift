@@ -28,6 +28,7 @@ enum AgentTone: String, Codable, CaseIterable, Identifiable {
 @Model
 final class UserPreferences {
     var goals: [HealthGoal]
+    var personalGoals: String
     var tone: AgentTone
     var minHoursBetweenNudges: Int
     var quietHoursStart: Int
@@ -36,6 +37,7 @@ final class UserPreferences {
 
     init(
         goals: [HealthGoal] = [.sleep, .activity],
+        personalGoals: String = "",
         tone: AgentTone = .empathetic,
         minHoursBetweenNudges: Int = 3,
         quietHoursStart: Int = 22,
@@ -43,6 +45,7 @@ final class UserPreferences {
         hasCompletedOnboarding: Bool = false
     ) {
         self.goals = goals
+        self.personalGoals = personalGoals
         self.tone = tone
         self.minHoursBetweenNudges = minHoursBetweenNudges
         self.quietHoursStart = quietHoursStart
