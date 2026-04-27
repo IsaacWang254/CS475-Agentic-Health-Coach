@@ -24,16 +24,16 @@ The proposed Agentic Health Coach is a proactive wellness assistant that combine
 - [x] Implement the "Explanation Engine" (ensuring the agent can articulate *why* a specific recommendation was generated based on recent data).
 
 ## 4. iOS App (The Control Center)
-- [ ] **Onboarding Flow:** Screen to define primary health goals and grant permissions.
-- [ ] **Settings UI:** Toggles for notification frequency, strictness, and system access.
-- [ ] **Persona/Tone Controls:** UI to select the agent's tone (e.g., Empathetic, Direct, Analytical).
-- [ ] **History Dashboard:** A log of past recommendations and the data signals that triggered them.
+- [x] **Onboarding Flow:** Screen to define primary health goals and grant permissions.
+- [x] **Settings UI:** Toggles for notification frequency, strictness, and system access.
+- [x] **Persona/Tone Controls:** UI to select the agent's tone (e.g., Empathetic, Direct, Analytical).
+- [x] **History Dashboard:** A log of past recommendations and the data signals that triggered them.
 
 ## 5. watchOS App (The Delivery Mechanism)
-- [ ] Build a glanceable main interface using SwiftUI for Apple Watch.
-- [ ] Implement actionable, rich notifications (e.g., "Start 10-min walk", "Dismiss", "Snooze").
-- [ ] Create a lightweight detailed view to show the "Why did I get this?" explanation directly on the wrist.
-- [ ] Ensure seamless state synchronization across the Watch and iPhone via `WatchConnectivity`.
+- [x] Build a glanceable main interface using SwiftUI for Apple Watch.
+- [x] Implement actionable, rich notifications (e.g., "Start 10-min walk", "Dismiss", "Snooze").
+- [x] Create a lightweight detailed view to show the "Why did I get this?" explanation directly on the wrist.
+- [x] Ensure seamless state synchronization across the Watch and iPhone via `WatchConnectivity`.
 
 ## 6. Testing & Refinement
 - [ ] Test background execution limits and ensure HealthKit queries succeed when the device is locked.

@@ -32,19 +32,22 @@ final class UserPreferences {
     var minHoursBetweenNudges: Int
     var quietHoursStart: Int
     var quietHoursEnd: Int
+    var hasCompletedOnboarding: Bool
 
     init(
         goals: [HealthGoal] = [.sleep, .activity],
         tone: AgentTone = .empathetic,
         minHoursBetweenNudges: Int = 3,
         quietHoursStart: Int = 22,
-        quietHoursEnd: Int = 7
+        quietHoursEnd: Int = 7,
+        hasCompletedOnboarding: Bool = false
     ) {
         self.goals = goals
         self.tone = tone
         self.minHoursBetweenNudges = minHoursBetweenNudges
         self.quietHoursStart = quietHoursStart
         self.quietHoursEnd = quietHoursEnd
+        self.hasCompletedOnboarding = hasCompletedOnboarding
     }
 }
 

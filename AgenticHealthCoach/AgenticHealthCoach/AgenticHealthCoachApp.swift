@@ -12,7 +12,6 @@ import SwiftData
 struct AgenticHealthCoachApp: App {
     let sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self,
             UserPreferences.self,
             ContextSnapshot.self,
             Recommendation.self,
@@ -28,15 +27,15 @@ struct AgenticHealthCoachApp: App {
 
     init() {
         ContextSyncService.registerBackgroundTasks(container: sharedModelContainer)
+        NotificationManager.shared.modelContainer = sharedModelContainer
+        NotificationManager.shared.configure()
+        PhoneConnectivityService.shared.activate()
     }
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .task {
-                    await HealthKitManager.shared.requestAuthorization()
-                    await EventKitManager.shared.requestAuthorization()
-                    await NotificationManager.shared.requestAuthorization()
                     await ContextSyncService.syncNow(container: sharedModelContainer)
                     ContextSyncService.scheduleNextRefresh()
                 }

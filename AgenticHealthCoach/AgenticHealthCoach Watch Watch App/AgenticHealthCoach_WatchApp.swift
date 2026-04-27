@@ -2,13 +2,15 @@
 //  AgenticHealthCoach_WatchApp.swift
 //  AgenticHealthCoach Watch Watch App
 //
-//  Created by Aimdrone 254 on 4/24/26.
-//
 
 import SwiftUI
 
 @main
 struct AgenticHealthCoach_Watch_Watch_AppApp: App {
+    init() {
+        WatchConnectivityService.shared.activate()
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView()

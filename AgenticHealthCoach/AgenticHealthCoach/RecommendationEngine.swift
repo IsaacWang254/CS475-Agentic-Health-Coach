@@ -41,6 +41,18 @@ struct RecommendationEngine {
         )
         context.insert(rec)
         try? context.save()
+
+        NotificationManager.shared.schedule(for: rec)
+        PhoneConnectivityService.shared.send(WatchPayload(
+            recommendationID: rec.persistentModelID.storeIdentifier ?? UUID().uuidString,
+            goalDisplayName: rec.goal.displayName,
+            message: rec.message,
+            explanation: rec.explanation,
+            timestamp: rec.timestamp,
+            stepsToday: snapshot.stepsToday,
+            sleepHoursLastNight: snapshot.sleepHoursLastNight,
+            minutesUntilNextEvent: snapshot.minutesUntilNextEvent
+        ))
     }
 
     private func currentPreferences(context: ModelContext) -> UserPreferences {
