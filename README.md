@@ -1,5 +1,27 @@
 # CS475-Agentic-Health-Coach
 
+## Teammate Setup
+
+The AI features run through **Firebase AI Logic** (Gemini Developer API backend). No API keys live in the repo — auth is handled by your Google account via Firebase project membership.
+
+### One-time setup
+
+1. Ask Isaac to add your Google account as an **Editor** on the Firebase project `agentic-health-coach`.
+2. Accept the email invite and confirm you can see the project at https://console.firebase.google.com.
+3. Clone this repo:
+   ```
+   git clone https://github.com/<org>/CS475-Agentic-Health-Coach.git
+   ```
+4. Open `AgenticHealthCoach/AgenticHealthCoach.xcodeproj` in Xcode. Wait for Swift Package Manager to resolve `firebase-ios-sdk` (first open takes a few minutes).
+5. Build and run on a simulator or device (⌘R). `GoogleService-Info.plist` is committed and points the app at the shared Firebase project, so no per-machine config is needed.
+
+### Notes
+- The Gemini model is set in `GeminiClient.swift` (`modelName`). Change it there if needed.
+- If you hit `PERMISSION_DENIED` at runtime, your Google account hasn't been added to the Firebase project yet — ping Isaac.
+- Free Gemini Developer API tier is shared across the team; if quota runs out, wait a minute and retry.
+
+---
+
 The proposed Agentic Health Coach is a proactive wellness assistant that combines Apple Watch data, smartphone context, and calendar information to deliver timely, low-friction health recommendations through the watch and phone. Rather than requiring users to manually inspect dashboards or initiate conversations, the system continuously interprets wearable and contextual signals in relation to user-defined goals such as improving sleep, increasing activity, managing stress, or maintaining workout consistency. When the agent detects an appropriate intervention opportunity, it generates a concise, context-aware recommendation, explains why it appeared, and delivers it through a glanceable Apple Watch interaction with optional follow-up on the phone. The system also gives users control over tone, notification behavior, and data access, allowing the experience to remain personalized, understandable, and privacy-aware rather than intrusive.
 
 # To do

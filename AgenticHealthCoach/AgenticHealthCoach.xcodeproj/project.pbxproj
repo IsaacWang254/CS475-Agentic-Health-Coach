@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A5B90702FA2C35E00802980 /* FirebaseAI in Frameworks */ = {isa = PBXBuildFile; productRef = 6A5B906F2FA2C35E00802980 /* FirebaseAI */; };
+		6A5B90722FA2C35E00802980 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = 6A5B90712FA2C35E00802980 /* FirebaseAppCheck */; };
+		6A5B90742FA2C35E00802980 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 6A5B90732FA2C35E00802980 /* FirebaseCore */; };
 		6A999D8F2F9BBD790099801B /* AgenticHealthCoach Watch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 6A999D852F9BBD770099801B /* AgenticHealthCoach Watch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -70,6 +73,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A5B90722FA2C35E00802980 /* FirebaseAppCheck in Frameworks */,
+				6A5B90742FA2C35E00802980 /* FirebaseCore in Frameworks */,
+				6A5B90702FA2C35E00802980 /* FirebaseAI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +129,9 @@
 			);
 			name = AgenticHealthCoach;
 			packageProductDependencies = (
+				6A5B906F2FA2C35E00802980 /* FirebaseAI */,
+				6A5B90712FA2C35E00802980 /* FirebaseAppCheck */,
+				6A5B90732FA2C35E00802980 /* FirebaseCore */,
 			);
 			productName = AgenticHealthCoach;
 			productReference = 6A999D712F9BBB040099801B /* AgenticHealthCoach.app */;
@@ -177,6 +186,9 @@
 			);
 			mainGroup = 6A999D682F9BBB030099801B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				6A5B906E2FA2C35E00802980 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 6A999D722F9BBB040099801B /* Products */;
 			projectDirPath = "";
@@ -535,6 +547,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6A5B906E2FA2C35E00802980 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.12.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		6A5B906F2FA2C35E00802980 /* FirebaseAI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A5B906E2FA2C35E00802980 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAI;
+		};
+		6A5B90712FA2C35E00802980 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A5B906E2FA2C35E00802980 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		6A5B90732FA2C35E00802980 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A5B906E2FA2C35E00802980 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6A999D692F9BBB030099801B /* Project object */;
 }

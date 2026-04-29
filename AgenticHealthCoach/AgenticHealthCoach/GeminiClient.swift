@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import FirebaseAI
 
 struct AgentDecision: Decodable {
     enum Action: String, Decodable {
@@ -19,69 +20,38 @@ struct AgentDecision: Decodable {
 }
 
 enum GeminiError: Error {
-    case invalidURL
-    case badResponse(Int, String)
     case emptyContent
     case malformedJSON(String)
 }
 
 struct GeminiClient {
-    var apiKey: String = Secrets.geminiAPIKey
-    var model: String = Secrets.geminiModel
-    var session: URLSession = .shared
+    var modelName: String = "gemini-3.1-flash-lite-preview"
 
     func decide(prompt: String) async throws -> AgentDecision {
-        let endpoint = "https://generativelanguage.googleapis.com/v1beta/models/\(model):generateContent"
-        guard var components = URLComponents(string: endpoint) else { throw GeminiError.invalidURL }
-        components.queryItems = [URLQueryItem(name: "key", value: apiKey)]
-        guard let url = components.url else { throw GeminiError.invalidURL }
-
-        let body: [String: Any] = [
-            "contents": [[
-                "role": "user",
-                "parts": [["text": prompt]],
-            ]],
-            "generationConfig": [
-                "temperature": 0.7,
-                "responseMimeType": "application/json",
-                "responseSchema": [
-                    "type": "object",
-                    "properties": [
-                        "action": ["type": "string", "enum": ["nudge", "stay_quiet"]],
-                        "goal": ["type": "string"],
-                        "message": ["type": "string"],
-                        "explanation": ["type": "string"],
-                        "reason": ["type": "string"],
-                    ],
-                    "required": ["action"],
-                ],
+        let schema = Schema.object(
+            properties: [
+                "action": .enumeration(values: ["nudge", "stay_quiet"]),
+                "goal": .string(),
+                "message": .string(),
+                "explanation": .string(),
+                "reason": .string(),
             ],
-        ]
+            optionalProperties: ["goal", "message", "explanation", "reason"]
+        )
 
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        let config = GenerationConfig(
+            temperature: 0.7,
+            responseMIMEType: "application/json",
+            responseSchema: schema
+        )
 
-        let (data, response) = try await session.data(for: request)
+        let model = FirebaseAI.firebaseAI(backend: .googleAI())
+            .generativeModel(modelName: modelName, generationConfig: config)
 
-        if let http = response as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
-            let snippet = String(data: data, encoding: .utf8) ?? ""
-            throw GeminiError.badResponse(http.statusCode, snippet)
-        }
+        let response = try await model.generateContent(prompt)
 
-        guard
-            let envelope = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-            let candidates = envelope["candidates"] as? [[String: Any]],
-            let content = candidates.first?["content"] as? [String: Any],
-            let parts = content["parts"] as? [[String: Any]],
-            let text = parts.first?["text"] as? String
-        else {
+        guard let text = response.text, let json = text.data(using: .utf8) else {
             throw GeminiError.emptyContent
-        }
-
-        guard let json = text.data(using: .utf8) else {
-            throw GeminiError.malformedJSON(text)
         }
         do {
             return try JSONDecoder().decode(AgentDecision.self, from: json)

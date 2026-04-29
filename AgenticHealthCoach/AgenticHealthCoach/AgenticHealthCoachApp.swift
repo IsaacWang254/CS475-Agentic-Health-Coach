@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SwiftData
+import FirebaseCore
 
 @main
 struct AgenticHealthCoachApp: App {
@@ -26,6 +27,7 @@ struct AgenticHealthCoachApp: App {
     }()
 
     init() {
+        FirebaseApp.configure()
         ContextSyncService.registerBackgroundTasks(container: sharedModelContainer)
         NotificationManager.shared.modelContainer = sharedModelContainer
         NotificationManager.shared.configure()
