@@ -30,6 +30,11 @@ final class WatchConnectivityService: NSObject, WCSessionDelegate {
         decode(data)
     }
 
+    func session(_ session: WCSession, didReceiveUserInfo userInfo: [String : Any] = [:]) {
+        guard let data = userInfo[WatchPayload.userInfoKey] as? Data else { return }
+        decode(data)
+    }
+
     private func decode(_ data: Data) {
         guard let payload = try? JSONDecoder().decode(WatchPayload.self, from: data) else { return }
         Task { @MainActor in

@@ -41,6 +41,7 @@ struct AgenticHealthCoachApp: App {
             ContentView()
                 .task {
                     seedVariantPresetsIfNeeded()
+                    PhoneConnectivityService.shared.resendLatest(container: sharedModelContainer)
                     await ContextSyncService.syncNow(container: sharedModelContainer)
                     ContextSyncService.scheduleNextRefresh()
                 }
