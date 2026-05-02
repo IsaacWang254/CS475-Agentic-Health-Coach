@@ -16,6 +16,8 @@ struct AgenticHealthCoachApp: App {
             UserPreferences.self,
             ContextSnapshot.self,
             Recommendation.self,
+            VariantPreset.self,
+            ChatMessage.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -38,10 +40,25 @@ struct AgenticHealthCoachApp: App {
         WindowGroup {
             ContentView()
                 .task {
+                    seedVariantPresetsIfNeeded()
                     await ContextSyncService.syncNow(container: sharedModelContainer)
                     ContextSyncService.scheduleNextRefresh()
                 }
         }
         .modelContainer(sharedModelContainer)
+    }
+
+    @MainActor
+    private func seedVariantPresetsIfNeeded() {
+        let context = sharedModelContainer.mainContext
+        let existing = (try? context.fetch(FetchDescriptor<VariantPreset>())) ?? []
+        let names = Set(existing.map(\.name))
+        if !names.contains("A") {
+            context.insert(VariantPreset(name: "A", config: .presetA))
+        }
+        if !names.contains("B") {
+            context.insert(VariantPreset(name: "B", config: .presetB))
+        }
+        try? context.save()
     }
 }

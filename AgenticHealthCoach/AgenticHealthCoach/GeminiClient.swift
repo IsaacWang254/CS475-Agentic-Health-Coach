@@ -59,4 +59,16 @@ struct GeminiClient {
             throw GeminiError.malformedJSON(text)
         }
     }
+
+    /// Free-form chat completion. No JSON schema; returns the model's plain text reply.
+    func reply(prompt: String) async throws -> String {
+        let config = GenerationConfig(temperature: 0.7)
+        let model = FirebaseAI.firebaseAI(backend: .googleAI())
+            .generativeModel(modelName: modelName, generationConfig: config)
+        let response = try await model.generateContent(prompt)
+        guard let text = response.text, !text.isEmpty else {
+            throw GeminiError.emptyContent
+        }
+        return text
+    }
 }

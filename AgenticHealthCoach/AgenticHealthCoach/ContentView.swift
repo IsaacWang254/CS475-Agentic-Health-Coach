@@ -38,6 +38,10 @@ private struct MainTabs: View {
         TabView {
             HomeView()
                 .tabItem { Label("Coach", systemImage: "sparkles") }
+            ChatView()
+                .tabItem { Label("Chat", systemImage: "text.bubble") }
+            LabView()
+                .tabItem { Label("Lab", systemImage: "flask") }
             HistoryView()
                 .tabItem { Label("History", systemImage: "clock") }
             SettingsView(preferences: preferences)
@@ -48,5 +52,5 @@ private struct MainTabs: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: [UserPreferences.self, ContextSnapshot.self, Recommendation.self], inMemory: true)
+        .modelContainer(for: [UserPreferences.self, ContextSnapshot.self, Recommendation.self, VariantPreset.self, ChatMessage.self], inMemory: true)
 }

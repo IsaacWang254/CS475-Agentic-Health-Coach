@@ -97,6 +97,8 @@ final class Recommendation {
     var explanation: String
     var dismissed: Bool
     var actedOn: Bool
+    var variantLabel: String?
+    var blockTag: String?
 
     init(
         timestamp: Date = .now,
@@ -104,7 +106,9 @@ final class Recommendation {
         message: String,
         explanation: String,
         dismissed: Bool = false,
-        actedOn: Bool = false
+        actedOn: Bool = false,
+        variantLabel: String? = nil,
+        blockTag: String? = nil
     ) {
         self.timestamp = timestamp
         self.goal = goal
@@ -112,5 +116,80 @@ final class Recommendation {
         self.explanation = explanation
         self.dismissed = dismissed
         self.actedOn = actedOn
+        self.variantLabel = variantLabel
+        self.blockTag = blockTag
+    }
+}
+
+enum PromptTone: String, Codable, CaseIterable, Identifiable {
+    case neutral, supportive
+    var id: String { rawValue }
+    var displayName: String { rawValue.capitalized }
+}
+
+enum PromptTiming: String, Codable, CaseIterable, Identifiable {
+    case fixed, contextAware
+    var id: String { rawValue }
+    var displayName: String {
+        switch self {
+        case .fixed: "Fixed"
+        case .contextAware: "Context-aware"
+        }
+    }
+}
+
+enum PromptExplanation: String, Codable, CaseIterable, Identifiable {
+    case with, without
+    var id: String { rawValue }
+    var displayName: String {
+        switch self {
+        case .with: "With explanation"
+        case .without: "Without explanation"
+        }
+    }
+}
+
+struct PromptConfig: Equatable, Sendable {
+    var tone: PromptTone = .neutral
+    var timing: PromptTiming = .contextAware
+    var explanation: PromptExplanation = .with
+    var systemPromptOverride: String? = nil
+    var notificationPromptOverride: String? = nil
+
+    nonisolated static let presetA = PromptConfig(tone: .neutral, timing: .fixed, explanation: .without)
+    nonisolated static let presetB = PromptConfig(tone: .supportive, timing: .contextAware, explanation: .with)
+    nonisolated static let autonomousDefault = PromptConfig(tone: .supportive, timing: .contextAware, explanation: .with)
+}
+
+nonisolated extension PromptConfig: Codable {}
+
+@Model
+final class VariantPreset {
+    var name: String
+    var configData: Data
+
+    var config: PromptConfig {
+        get { (try? JSONDecoder().decode(PromptConfig.self, from: configData)) ?? PromptConfig() }
+        set { configData = (try? JSONEncoder().encode(newValue)) ?? Data() }
+    }
+
+    init(name: String, config: PromptConfig) {
+        self.name = name
+        self.configData = (try? JSONEncoder().encode(config)) ?? Data()
+    }
+}
+
+@Model
+final class ChatMessage {
+    var timestamp: Date
+    var role: String
+    var text: String
+    var variantLabel: String?
+
+    init(timestamp: Date = .now, role: String, text: String, variantLabel: String? = nil) {
+        self.timestamp = timestamp
+        self.role = role
+        self.text = text
+        self.variantLabel = variantLabel
     }
 }

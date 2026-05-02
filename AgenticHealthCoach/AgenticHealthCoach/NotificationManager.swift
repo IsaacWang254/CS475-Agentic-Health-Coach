@@ -55,6 +55,7 @@ final class NotificationManager: NSObject {
             options: []
         )
         center.setNotificationCategories([category])
+        refreshAuthorizationState()
     }
 
     func requestAuthorization() async {
@@ -68,22 +69,106 @@ final class NotificationManager: NSObject {
     }
 
     func schedule(for recommendation: Recommendation) {
-        guard case .authorized = state else { return }
+        let title = recommendation.goal.displayName
+        let subtitle: String
+        let body: String
+        if recommendation.explanation.isEmpty {
+            body = recommendation.message
+            subtitle = ""
+        } else {
+            body = "\(recommendation.message)\n\(recommendation.explanation)"
+            subtitle = "Why this nudge"
+        }
+        let recommendationID = recommendation.persistentModelID.storeIdentifier ?? ""
 
+        center.getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                self.updateAuthorizationState(.authorized)
+                self.enqueueNotification(
+                    title: title,
+                    subtitle: subtitle,
+                    body: body,
+                    recommendationID: recommendationID
+                )
+            case .notDetermined:
+                self.updateAuthorizationState(.requesting)
+                self.center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                    if let error {
+                        self.updateAuthorizationState(.failed(error))
+                        print("Notification authorization failed: \(error.localizedDescription)")
+                        return
+                    }
+
+                    guard granted else {
+                        self.updateAuthorizationState(.denied)
+                        print("Notification authorization denied; skipping nudge notification.")
+                        return
+                    }
+
+                    self.updateAuthorizationState(.authorized)
+                    self.enqueueNotification(
+                        title: title,
+                        subtitle: subtitle,
+                        body: body,
+                        recommendationID: recommendationID
+                    )
+                }
+            case .denied:
+                self.updateAuthorizationState(.denied)
+                print("Notifications are denied in iOS Settings; skipping nudge notification.")
+            @unknown default:
+                self.updateAuthorizationState(.denied)
+                print("Unknown notification authorization status; skipping nudge notification.")
+            }
+        }
+    }
+
+    private func enqueueNotification(title: String, subtitle: String, body: String, recommendationID: String) {
         let content = UNMutableNotificationContent()
-        content.title = recommendation.goal.displayName
-        content.body = recommendation.message
-        content.subtitle = recommendation.explanation
+        content.title = title
+        content.subtitle = subtitle
+        content.body = body
         content.categoryIdentifier = Self.categoryID
         content.sound = .default
-        content.userInfo = [Self.recommendationIDKey: recommendation.persistentModelID.storeIdentifier ?? ""]
+        content.userInfo = [Self.recommendationIDKey: recommendationID]
 
         let request = UNNotificationRequest(
             identifier: UUID().uuidString,
             content: content,
             trigger: nil
         )
-        center.add(request) { _ in }
+        center.add(request) { error in
+            if let error {
+                print("Failed to schedule nudge notification: \(error.localizedDescription)")
+            } else {
+                print("Scheduled nudge notification.")
+            }
+        }
+    }
+
+    private func refreshAuthorizationState() {
+        center.getNotificationSettings { [weak self] settings in
+            guard let self else { return }
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                self.updateAuthorizationState(.authorized)
+            case .denied:
+                self.updateAuthorizationState(.denied)
+            case .notDetermined:
+                self.updateAuthorizationState(.notDetermined)
+            @unknown default:
+                self.updateAuthorizationState(.denied)
+            }
+        }
+    }
+
+    private func updateAuthorizationState(_ newState: AuthorizationState) {
+        DispatchQueue.main.async {
+            self.state = newState
+        }
     }
 }
 

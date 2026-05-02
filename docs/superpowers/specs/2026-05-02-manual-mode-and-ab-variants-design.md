@@ -60,7 +60,7 @@ Each case yields a synthetic `ContextSnapshot` and a fixed simulated `now`.
 | S1 | Poor Sleep + Busy Morning | 1 & 2 | `sleepHoursLastNight = 4.53` (4h 32m, bedtime 2:30 AM); calendar: Tue 9 AM lecture, 11 AM tutoring, 1 PM quiz; `minutesUntilNextEvent = 30` (firing at 8:30 AM) |
 | S2 | Prolonged Inactivity | 2 | `stepsToday ≈ 600` over 4 hours, `activeEnergyKcalToday ≈ 80`, `minutesUntilNextEvent = nil` (free time ahead) |
 | S3 | Pre-Deadline Stress | 2 | simulated time 9:00 PM, `latestHeartRateBPM = 92`, `latestHRVms = 28` |
-| S4 | Post-Workout Recovery | 1 (& 2A replication) | `workoutsLast7Days += 1`, `activeEnergyKcalToday ≈ 600`, `latestHeartRateBPM = 110` (post-run elevated), `minutesUntilNextEvent = 90` |
+| S4 | Post-Workout Recovery | 1 (& 3 replication) | `workoutsLast7Days += 1`, `activeEnergyKcalToday ≈ 600`, `latestHeartRateBPM = 110` (post-run elevated), `minutesUntilNextEvent = 90` |
 
 ### `RecommendationEngine` (refactored)
 
@@ -71,7 +71,7 @@ func runOnce(
     simulatedNow: Date?,        // nil = use Date.now
     bypassGuards: Bool,         // true skips quiet-hours / cadence checks
     variantLabel: String?,      // "A" / "B" / "custom" / nil
-    blockTag: String?           // "1" / "2" / "2A" / nil
+    blockTag: String?           // "1" / "2" / "3" / custom / nil
 ) async
 ```
 
@@ -104,7 +104,7 @@ Add two optional fields: `variantLabel: String?`, `blockTag: String?`. Defaultin
   1. **Scenario picker** (S1–S4 + "Live signals" option).
   2. **Snapshot editor** — form fields pre-filled from the chosen scenario, all editable before firing.
   3. **Variant selector** — A / B / Custom. Custom reveals tone/timing/explanation toggles + raw override text fields.
-  4. **Block tag** — picker (1 / 2 / 2A / none).
+  4. **Block tag** — picker (1 / 2 / 3 / custom text).
   5. **Fire** button — runs the engine with `bypassGuards: true`.
 - **`HistoryView`** — gain a filter by `blockTag` and `variantLabel`.
 
